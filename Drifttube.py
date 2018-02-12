@@ -46,7 +46,7 @@ class Data:
             int
                 Drift time in nanoseconds
         """
-        
+        #TODO: implement
         return 0
             
     def getArray(self):
@@ -69,7 +69,7 @@ class Data:
             Author: Stefan Bieschke
             Date: 02/12/2018
         """
-        # TODO: implement time calibration
+        #TODO: implement time calibration
         plt.title("Event #{} voltage".format(self.eventNumber))
         plt.xlabel("time [ns]")
         plt.ylabel("voltage [V]")
@@ -160,17 +160,21 @@ events = []
 #Read first 8 Bytes
 nEvents = np.fromfile(file,np.int64,1)[0]
 
+#Read events from binary file
 for i in range(nEvents):
     data = np.fromfile(file,float,800)
     events.append(Data(data,i))
 
+#Build DataSet object from events read above
 dataset = DataSet(events)
+
+
 dataset.performGroundCalibration()
 
-print(dataset.getSize())
-dataset.getEvent(1).plotData()
+#print(dataset.getSize())
+#dataset.getEvent(1).plotData()
 
-#Experimental: Dt-spect
+#Create drift time spectrum
 drifttimes = []
 for event in dataset.events:
     drifttimes.append(event.getDriftTime(-0.25,dataset.isCalibrated),)
