@@ -8,6 +8,7 @@ It is used in the particle physics internship for undergraduate students at the 
 
 # Data format
 The raw data is read from a binary file. Its contents are as follows:
+
 1.) First 8 bytes: Number of events in the binary file
 
 2.) 800 * 64 bits: double precision floating point numbers containing the voltage for each of the 800 FADC bins
