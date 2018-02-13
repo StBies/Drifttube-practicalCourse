@@ -1,0 +1,2 @@
+# ignore binary file containing data to be read
+event.npy
