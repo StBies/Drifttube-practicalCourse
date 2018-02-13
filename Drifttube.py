@@ -8,7 +8,7 @@ class Data:
         Author: Stefan Bieschke
         Date: 02/12/2018
     """
-    def __init__(self,dataArray,eventNumber):
+    def __init__(self,data_array,event_number):
         """ Constructor
             Initializes a new Data object with the raw data measured by a FADC given as parameter. Also sets an event number.
 
@@ -22,11 +22,11 @@ class Data:
             eventNumber : int
                 Number of the event
         """
-        self.rawData = dataArray
-        self.eventNumber = eventNumber
+        self._raw_data = data_array
+        self._event_number = event_number
         
         
-    def getDriftTime(self,threshold,calibrated):
+    def get_drift_time(self,threshold,calibrated):
         """ Returns the drift time of this event's Data in nanoseconds
             The DataSet must be calibrated prior to calculating the drift time.
             
@@ -49,7 +49,7 @@ class Data:
         #TODO: implement
         return 0
             
-    def getArray(self):
+    def get_array(self):
         """ Getter method for the raw array
 
             Author: Stefan Bieschke
@@ -60,9 +60,9 @@ class Data:
             array
                 Array containing the raw voltage
         """
-        return self.rawData
+        return self._raw_data
 
-    def plotData(self):
+    def plot_data(self):
         """ Plot the Data
             Plots the event's voltage pulse form using matplotlib with time [ns] on the x-axis and voltage [V] on the y-axis.
             
@@ -70,10 +70,10 @@ class Data:
             Date: 02/12/2018
         """
         #TODO: implement time calibration
-        plt.title("Event #{} voltage".format(self.eventNumber))
+        plt.title("Event #{} voltage".format(self._event_number))
         plt.xlabel("time [ns]")
         plt.ylabel("voltage [V]")
-        plt.plot(self.rawData)
+        plt.plot(self._raw_data)
         plt.show()
 
 class DataSet:
@@ -87,9 +87,9 @@ class DataSet:
             Author: Stefan Bieschke
             Date: 02/12/2018
         """
-        self.nEvents = 0
-        self.isCalibrated = False
-        self.events = []
+        self._n_events = 0
+        self._is_calibrated = False
+        self._events = []
 
     def __init__(self,events):
         """ Constructor with an event list as parameter.
@@ -103,11 +103,11 @@ class DataSet:
             events : list
                 list of Data objects
         """
-        self.nEvents = len(events)
-        self.isCalibrated = False
-        self.events = events
+        self._n_events = len(events)
+        self._is_calibrated = False
+        self._events = events
 
-    def getEvent(self,eventNo):
+    def get_event(self,event_no):
         """ Returns the event specified by the parameter eventNo as Data class object if at least eventNo events exist in the DataSet.
 
             Author: Stefan Bieschke
@@ -123,10 +123,10 @@ class DataSet:
             Data
                 Data object containing the event
         """
-        if eventNo < self.nEvents:
-            return self.events[eventNo]
+        if event_no < self._n_events:
+            return self._events[event_no]
 
-    def getSize(self):
+    def get_size(self):
         """ Getter method for the size of the DataSet.
             Returns the size of the DataSet, thus the maximum number of an event that can be requested using the getEvent(...) method.
             
@@ -138,9 +138,21 @@ class DataSet:
             int
                 Number of events stored in this DataSet object.
         """
-        return self.nEvents
+        return self._n_events
 
-    def performGroundCalibration(self):
+    def is_calibrated(self):
+        """ Returns the status of the calibration
+            True if calibration was already performed, False else
+
+            Returns
+            -------
+                bool
+                    True if calibrated, False else
+
+        """
+        return self._is_calibrated
+
+    def perform_ground_calibration(self):
         """ Perform a ground calibration on all data in this DataSet.
             After the ground calibration, ground potential should read around 0.0 Volts.
 
@@ -158,10 +170,10 @@ file = open("event.npy",'rb') #read binary mode
 events = []
 
 #Read first 8 Bytes
-nEvents = np.fromfile(file,np.int64,1)[0]
+n_events = np.fromfile(file,np.int64,1)[0]
 
 #Read events from binary file
-for i in range(nEvents):
+for i in range(n_events):
     data = np.fromfile(file,float,800)
     events.append(Data(data,i))
 
@@ -169,15 +181,19 @@ for i in range(nEvents):
 dataset = DataSet(events)
 
 
-dataset.performGroundCalibration()
+dataset.perform_ground_calibration()
 
-#print(dataset.getSize())
-#dataset.getEvent(1).plotData()
+#print(dataset.get_size())
+dataset.get_event(1).plot_data()
 
 #Create drift time spectrum
 drifttimes = []
-for event in dataset.events:
-    drifttimes.append(event.getDriftTime(-0.25,dataset.isCalibrated),)
+#for i in range(dataset.get_size()):
+#    drifttimes.append(dataset.get_event(i).get_drift_time(-0.25,dataset.is_calibrated()))
+
+#TODO: access to private member
+for event in dataset._events:
+    drifttimes.append(event.get_drift_time(-0.25,dataset.is_calibrated()))
 
 plt.hist(drifttimes,bins=500)
 plt.show()
