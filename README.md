@@ -15,6 +15,8 @@ The raw data is read from a binary file. Its contents are as follows:
 
 3.) Second point repeated as many times as coded in the file's first 8 bytes.
 
+# Code conventions
+Writing this code I tried following the PEP 8 coding conventions found at https://www.python.org/dev/peps/pep-0008
 
 # Contact
 For a fully implemented version of this software contact me via mail
