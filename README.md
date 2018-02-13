@@ -6,6 +6,13 @@ Note that this software is NOT a complete analysis tool.
 The software provided in this repository was designed for teaching purposes only.
 It is used in the particle physics internship for undergraduate students at the university of Hamburg for a teaching experiment regarding the properties of gaseous particle detectors.
 
+The aim is to teach students the importance as well as implementation basics of automated analysis for large sets of data. In the laboratory course, students learn about basic principles of particle detection in gaseous detectors and use NIM hardware.
+
+After understanding signal discrimination, triggering and timing, data is recorded using a Flash Analog to digital converter (FADC) and the data read using it is analyzed in software.
+
+The principles learned in the lab should then be applied to digitized waveforms. Therefore, algorithms need to be developed and implemented, in particular for a ground level calibration and the calculation of a drift time. Additionally, a software representation of a disciminator is to be developed.
+
+Last, algorithms for numerical integration are discussed and used for calculating the relation between drift distance and drift time. 
 # Data format
 The raw data is read from a binary file. Its contents are as follows:
 
