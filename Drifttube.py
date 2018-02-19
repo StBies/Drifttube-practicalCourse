@@ -162,6 +162,28 @@ class DataSet:
         zero = 0
         #TODO implement
 
+    def calculateEfficiency(self,threshold):
+        """ Calculate the detection efficiency for a given threshold voltage.
+
+            Author: Stefan Bieschke
+            Date: 02/19/2018
+
+            Parameters
+            ----------
+            threshold : float
+                Threshold in volts for that the efficiency is calculated.
+                Must be smaller than zero.
+
+            Returns
+            -------
+                float, float
+                    Efficiency [0,1], error [0,1]
+                    
+        """
+        efficiency, error = 0
+        #TODO implement
+        return efficiency, error
+
 
 #----------------------------------------------------------------------
 #                           Begin program execution
