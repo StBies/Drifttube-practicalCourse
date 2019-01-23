@@ -188,7 +188,7 @@ class DataSet:
 #----------------------------------------------------------------------
 #                           Begin program execution
 #----------------------------------------------------------------------
-file = open("event2.npy",'rb') #read binary mode
+file = open("event.npy",'rb') #read binary mode
 events = []
 
 #Read first 8 Bytes
