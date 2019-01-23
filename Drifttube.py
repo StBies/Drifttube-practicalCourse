@@ -180,7 +180,7 @@ class DataSet:
                     Efficiency [0,1], error [0,1]
                     
         """
-        efficiency, error = 0
+        efficiency, error = 0, 0
         #TODO implement
         return efficiency, error
 
@@ -188,15 +188,16 @@ class DataSet:
 #----------------------------------------------------------------------
 #                           Begin program execution
 #----------------------------------------------------------------------
-file = open("event.npy",'rb') #read binary mode
+file = open("event2.npy",'rb') #read binary mode
 events = []
 
 #Read first 8 Bytes
 n_events = np.fromfile(file,np.int64,1)[0]
+n_bins = np.fromfile(file,np.int32,1)[0]
 
 #Read events from binary file
 for i in range(n_events):
-    data = np.fromfile(file,float,800)
+    data = np.fromfile(file,np.float64,n_bins)
     events.append(Data(data,i))
 
 #Build DataSet object from events read above
@@ -208,14 +209,17 @@ dataset.perform_ground_calibration()
 #print(dataset.get_size())
 dataset.get_event(1).plot_data()
 
-#Create drift time spectrum
+#TODO: Create drift time spectrum
 drifttimes = []
 #for i in range(dataset.get_size()):
 #    drifttimes.append(dataset.get_event(i).get_drift_time(-0.25,dataset.is_calibrated()))
 
-#TODO: access to private member
 for event in dataset._events:
     drifttimes.append(event.get_drift_time(-0.25,dataset.is_calibrated()))
+
+#TODO: Create rt-relation
+
+#TODO: Drift time spectrum and rt-relation for several threshold voltages
 
 plt.hist(drifttimes,bins=500)
 plt.show()
