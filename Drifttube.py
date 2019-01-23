@@ -184,6 +184,9 @@ class DataSet:
         #TODO implement
         return efficiency, error
 
+    #TODO: Define a method to calculate drift time spectrum
+    #TODO: Define a method to calculate rt-relation
+
 
 #----------------------------------------------------------------------
 #                           Begin program execution
