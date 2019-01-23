@@ -18,9 +18,11 @@ The raw data is read from a binary file. Its contents are as follows:
 
 1.) First 8 bytes: Number of events in the binary file
 
-2.) 800 * 64 bits: double precision floating point numbers containing the voltage for each of the 800 FADC bins
+2.) 4 bytes: Number of entries per event called "n_bins"
 
-3.) Second point repeated as many times as coded in the file's first 8 bytes.
+3.) n_bins * 64 bits: double precision floating point numbers containing the voltage for each of the 800 FADC bins
+
+4.) Second point repeated as many times as coded in the file's first 8 bytes.
 
 # Code conventions
 Writing this code I tried following the PEP 8 coding conventions found at https://www.python.org/dev/peps/pep-0008
