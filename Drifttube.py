@@ -26,7 +26,7 @@ class Data:
         self._event_number = event_number
         
         
-    def get_drift_time(self,threshold,calibrated):
+    def get_drift_time(self,threshold,calibrated,triggertime = 0):
         """ Returns the drift time of this event's Data in nanoseconds
             The DataSet must be calibrated prior to calculating the drift time.
             
@@ -40,6 +40,9 @@ class Data:
 
             calibrated : bool
                 specifying if DataSet is calibrated
+                
+            triggertime : int
+                Time in the event where the trigger is located in ns
 
             Returns
             -------
@@ -69,7 +72,7 @@ class Data:
             Author: Stefan Bieschke
             Date: 02/12/2018
         """
-        #TODO: implement time calibration
+        #TODO: implement time axis scale
         plt.title("Event #{} voltage".format(self._event_number))
         plt.xlabel("time [ns]")
         plt.ylabel("voltage [V]")
@@ -80,16 +83,6 @@ class DataSet:
     """ A collection of Data objects. This class offers some methods to pull out
     events, to ask for the size and, most important, to perform a ground calibration
     """
-    def __init__(self):
-        """ Default constructor
-            Initializes an empty DataSet object
-            
-            Author: Stefan Bieschke
-            Date: 02/12/2018
-        """
-        self._n_events = 0
-        self._is_calibrated = False
-        self._events = []
 
     def __init__(self,events):
         """ Constructor with an event list as parameter.
@@ -146,8 +139,8 @@ class DataSet:
 
             Returns
             -------
-                bool
-                    True if calibrated, False else
+            bool
+                True if calibrated, False else
 
         """
         return self._is_calibrated
@@ -158,71 +151,86 @@ class DataSet:
 
             Author: Stefan Bieschke
             Date: 02/12/2018
-        """        
-        zero = 0
-        #TODO implement
-
-    def calculateEfficiency(self,threshold):
-        """ Calculate the detection efficiency for a given threshold voltage.
-
-            Author: Stefan Bieschke
-            Date: 02/19/2018
-
-            Parameters
-            ----------
-            threshold : float
-                Threshold in volts for that the efficiency is calculated.
-                Must be smaller than zero.
-
+            
             Returns
             -------
-                float, float
-                    Efficiency [0,1], error [0,1]
-                    
-        """
-        efficiency, error = 0, 0
+            float
+                shift of the ground level before calibration.
+            float   
+                mean noise amplitude.
+        """        
+        zero = 0
+        noise = 0
         #TODO implement
-        return efficiency, error
+        return zero, noise
 
     #TODO: Define a method to calculate drift time spectrum
     #TODO: Define a method to calculate rt-relation
 
+# Function - not part of a class
+def calculateEfficiency(self,n_triggers,n_valid):
+    """ Calculate the detection efficiency for a given given number of valid events (a.k.a events with a valid drift time and a given number
+    of total triggers
 
+        Author: Stefan Bieschke
+        Date: 08/14/2019
+
+        Parameters
+        ----------
+        n_triggers : int
+            Number of triggers in total
+        n_valid : int
+            Number of events with valid drift times
+
+        Returns
+        -------
+        float, float
+            Efficiency [0,1], error [0,1]            
+    """
+    efficiency, error = 0, 0
+    #TODO implement
+    return efficiency, error
 #----------------------------------------------------------------------
 #                           Begin program execution
 #----------------------------------------------------------------------
+""" Toggle comment if you want to give the file name as command line parameter
+#import sys
+#file = open(sys.argv[1],'rb')
+"""
 file = open("event.npy",'rb') #read binary mode
-events = []
 
 #Read first 8 Bytes
 n_events = np.fromfile(file,np.int64,1)[0]
 n_bins = np.fromfile(file,np.int32,1)[0]
 
+events = [0] * n_events
 #Read events from binary file
 for i in range(n_events):
     data = np.fromfile(file,np.float64,n_bins)
-    events.append(Data(data,i))
+    events[i] = Data(data,i)
 
 #Build DataSet object from events read above
 dataset = DataSet(events)
 
+zero, noise = dataset.perform_ground_calibration()
 
-dataset.perform_ground_calibration()
-
-#print(dataset.get_size())
 dataset.get_event(1).plot_data()
 
 #TODO: Create drift time spectrum
-drifttimes = []
-#for i in range(dataset.get_size()):
-#    drifttimes.append(dataset.get_event(i).get_drift_time(-0.25,dataset.is_calibrated()))
+drifttimes = [0] * n_events
 
-for event in dataset._events:
-    drifttimes.append(event.get_drift_time(-0.25,dataset.is_calibrated()))
+for i in range(dataset._n_events):
+    drifttimes[i] = dataset.get_event(i).get_drift_time(-0.25,dataset.is_calibrated())
+
+
+histrange = (0,4095)
+nBins = int((histrange[1] - histrange[0]) / 4) 
+
+hist = plt.hist(drifttimes,range=histrange,bins=nBins)
+#TODO: Add title and axis labels
+plt.show()
 
 #TODO: Create rt-relation
-
 #TODO: Drift time spectrum and rt-relation for several threshold voltages
-
-plt.hist(drifttimes,bins=500)
-plt.show()
+#TODO: Efficiency with errors for all these threshold voltages
+#TODO: plot eff with errorbars vs. threshold
