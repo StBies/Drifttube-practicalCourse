@@ -16,11 +16,11 @@ Last, algorithms for numerical integration are discussed and used for calculatin
 # Data format
 The raw data is read from a binary file. Its contents are as follows:
 
-1.) First 8 bytes: Number of events in the binary file
+1.) First 8 bytes: Number of events in the binary file (in the byte order of c language type "uint64_t"
 
-2.) 4 bytes: Number of entries per event called "n_bins"
+2.) 4 bytes: Number of entries per event called "n_bins" in the byte order of c type "uint32_t"
 
-3.) n_bins * 64 bits: double precision floating point numbers containing the voltage for each of the 800 FADC bins
+3.) n_bins * 64 bits: double precision floating point numbers containing the voltage for each of the n_bins FADC bins
 
 4.) Second point repeated as many times as coded in the file's first 8 bytes.
 
