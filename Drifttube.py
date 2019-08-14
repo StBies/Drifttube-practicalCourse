@@ -164,9 +164,6 @@ class DataSet:
         #TODO implement
         return zero, noise
 
-    #TODO: Define a method to calculate drift time spectrum
-    #TODO: Define a method to calculate rt-relation
-
 # Function - not part of a class
 def calculateEfficiency(self,n_triggers,n_valid):
     """ Calculate the detection efficiency for a given given number of valid events (a.k.a events with a valid drift time and a given number
