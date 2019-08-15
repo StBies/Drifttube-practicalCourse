@@ -1,0 +1,7 @@
+#ignore compiled files
+obj/
+Drifttube
+
+#ignore data
+*.npy
+*.dat

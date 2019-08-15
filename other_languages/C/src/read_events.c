@@ -1,6 +1,6 @@
-#include "inc/read_events.h"
+#include "read_events.h"
 
-double** read_events_from_file(const char* filename)
+Events read_events_from_file(const char* filename)
 {
 	FILE* in_file = fopen(filename,"rb");
 	uint64_t n_events = 0;
@@ -20,5 +20,10 @@ double** read_events_from_file(const char* filename)
 		}
 	}
 
-	return all_events;
+	fclose(in_file);
+	Events evts;
+	evts.all_events = all_events;
+	evts.n_events = n_events;
+	evts.event_size = event_size;
+	return evts;
 }
